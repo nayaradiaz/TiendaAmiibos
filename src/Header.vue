@@ -16,12 +16,13 @@
 </template>
 <style scope>
 header {
-  background-color: rgb(255, 72, 72);
+  background-color: #dd2020;
   color: white;
   height: 10vh;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  
 }
 .input {
   border: 2px solid transparent;
@@ -42,17 +43,17 @@ header {
   background-color: white;
 }
 
-/* From Uiverse.io by adamgiebl */ 
 #button {
+  height: 2.2em;
+  margin-left: 5px;
   color: #090909;
-  padding: 0.7em 1.7em;
   font-size: 18px;
   border-radius: 0.5em;
   background: #e8e8e8;
   cursor: pointer;
   border: 1px solid #e8e8e8;
   transition: all 0.3s;
-  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+  box-shadow: 4px 4px 20px #c5c5c5;
 }
 
 #button:hover {
