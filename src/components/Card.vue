@@ -25,7 +25,6 @@ defineProps({
     border-radius: 5px;
     box-shadow: #a5a2a2 5px 5px 10px;
     background-color: #e5e5e5;
-
     width: 40vh;
     height: 35vh;
 

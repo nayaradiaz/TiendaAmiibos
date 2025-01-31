@@ -2,6 +2,7 @@
 
 import { ref } from 'vue'
 import Card from './components/Card.vue';
+import Header from '/src/Header.vue';
 
 let array = ref(null);
 const url = "https://www.amiiboapi.com/api/amiibo/";
@@ -18,6 +19,7 @@ api();
 </script>
 
 <template>
+   <Header />
     <p v-if="array == null">Cragando...</p>
     <div v-else class="container">
 

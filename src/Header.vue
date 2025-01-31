@@ -1,16 +1,26 @@
 <script setup>
+// import SearchInput from 'vue-search-input';
+// import 'vue-search-input/dist/styles.css'
+// const modelValue = defineProps(['modelValue']);
+// console.log(modelValue)
+
 
 </script>
 
 <template>
-  <div>
-    <h1>Tienda Amiibos</h1>
+  <header>
+    <div>
+      <h1>Tienda Amiibos</h1>
 
-  </div>
-  <div>
-    <input type="text" name="" class="input">
-    <input type="submit" value="Buscar" id="button">
-  </div>
+    </div>
+    <div>
+      <input type="text" name="" class="input">
+    <input type="submit" value="Buscar" id="button"> 
+      <!-- <SearchInput v-model="modelValue" /> -->
+
+    </div>
+  </header>
+
 
 
 </template>
@@ -22,8 +32,9 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  
+
 }
+
 .input {
   border: 2px solid transparent;
   width: 15em;
