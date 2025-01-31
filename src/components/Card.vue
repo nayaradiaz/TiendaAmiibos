@@ -1,43 +1,36 @@
 <script setup>
-defineProps({
-    data: Object
-})
+import { defineProps, defineEmits } from 'vue';
 
-// Función para añadir al carrito
+// Definir las props que recibimos
+const props = defineProps({
+  data: Object
+});
+
+// Definir la función para emitir el evento 'add-to-cart'
+const emit = defineEmits();
+
+// Emitir el producto cuando se hace clic en "Añadir al carrito"
 const addToCart = () => {
-    // Obtener carrito desde LocalStorage
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    
-    // Verificar si el producto ya está en el carrito
-    const productIndex = cart.findIndex(item => item.tail === data.tail);
-    
-    if (productIndex === -1) {
-        // Si el producto no está en el carrito, lo agregamos
-        cart.push(data);
-    } else {
-        // Si ya existe, actualizamos la cantidad o cualquier otra lógica
-        cart[productIndex].quantity++;
-    }
+  const item = props.data;  // Accedemos a los datos pasados por el padre
+  emit('add-to-cart', item); // Emitir el evento con el producto
+};
 
-    // Guardamos el carrito actualizado en LocalStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
 
-    console.log(`${data.name} added to cart`);
-}
 </script>
 
 <template>
-    <div class="wrapper">
-        <div>
-            <img :src="data.image" alt="Amiibo" class="img">
-        </div>
-        <div class="contenido">
-            <h2>{{ data.name }}</h2>
-            <p>{{ data.amiiboSeries }}</p>
-            <button @click="addToCart">Add to Cart</button>
-        </div>
+  <div class="wrapper">
+    <div>
+      <img :src="props.data.image" alt="Amiibo" class="img">
     </div>
+    <div class="contenido">
+      <h2>{{ props.data.name }}</h2>
+      <p>{{ props.data.amiiboSeries }}</p>
+      <button @click="addToCart" class="agregar">Añadir al carrito</button>
+    </div>
+  </div>
 </template>
+
 
 <style scoped>
 .wrapper {
