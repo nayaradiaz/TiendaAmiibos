@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import Card from './components/Card.vue';
 
 let array = ref(null);
@@ -15,7 +15,6 @@ const api = async () => {
     }
 };
 
-// Carrito como estado reactivo
 const cart = ref(JSON.parse(localStorage.getItem("cart")) || []);
 
 // Función para agregar un producto al carrito
@@ -23,45 +22,49 @@ const addToCart = (item) => {
     const itemInCart = cart.value.find(product => product.tail === item.tail);
 
     if (itemInCart) {
-        // Si el producto ya está en el carrito, aumentar su cantidad
         itemInCart.quantity += 1;
     } else {
-        // Si el producto no está en el carrito, agregarlo con cantidad 1
         item.quantity = 1;
         cart.value.push(item);
     }
 
-    // Guardar el carrito en el localStorage
     localStorage.setItem("cart", JSON.stringify(cart.value));
 };
+
 // Función para eliminar un ítem del carrito
 const removeItem = (tail) => {
     const index = cart.value.findIndex(item => item.tail === tail);
     if (index !== -1) {
-        // Si la cantidad es mayor que 1, reducimos la cantidad
         if (cart.value[index].quantity > 1) {
             cart.value[index].quantity--;
         } else {
-            // Si la cantidad es 1, eliminamos el ítem
             cart.value.splice(index, 1);
         }
-
-        // Actualizamos LocalStorage con el carrito actualizado
         localStorage.setItem('cart', JSON.stringify(cart.value));
     }
 };
 
-// Mostrar el carrito
+// Función para aumentar la cantidad de un ítem en el carrito
+const increaseQuantity = (tail) => {
+    const item = cart.value.find(item => item.tail === tail);
+    if (item) {
+        item.quantity++;
+        localStorage.setItem('cart', JSON.stringify(cart.value));
+    }
+};
+
+// Función para mostrar el carrito
 const showCart = () => {
     cart.value = JSON.parse(localStorage.getItem("cart")) || [];
     document.getElementById("offcanvas").classList.add("open");
 };
 
-// Cerrar el carrito
+// Función para cerrar el carrito
 const closeCart = () => {
     document.getElementById("offcanvas").classList.remove("open");
 };
 
+// Llamada a la API para cargar los productos
 api();
 </script>
 
@@ -82,25 +85,22 @@ api();
         <Card v-for="item in array" :key="item.tail" :data="item" @add-to-cart="addToCart" />
     </div>
 
-    <!-- Offcanvas -->
+    <!-- Offcanvas para el carrito -->
     <div id="offcanvas" class="offcanvas">
         <div class="offcanvas-content">
             <div class="encabezado">
                 <div>
                     <h2>Carrito</h2>
-
                 </div>
                 <div>
                     <button @click="closeCart" class="cerrar">Cerrar</button>
                 </div>
-
             </div>
             <div class="cart-items">
-
                 <div v-for="item in cart" :key="item.tail">
-
                     <div class="cart-item">
-                        <div> <img :src="item.image" alt="Amiibo" class="cart-item-img" />
+                        <div>
+                            <img :src="item.image" alt="Amiibo" class="cart-item-img" />
                         </div>
                         <div>
                             <h4>{{ item.name }}</h4>
@@ -109,41 +109,50 @@ api();
                             <p>{{ item.amiiboSeries }}</p>
                         </div>
                         <div>
+
+                            <!-- Botón para eliminar la cantidad -->
+                            <button @click="removeItem(item.tail)" class="remove-btn">−</button>
+                        </div>
+                        <div>
                             <p>{{ item.quantity }}</p>
                         </div>
                         <div>
-                            <button @click="removeItem(item.tail)" class="remove-btn">−</button>
+                            <!-- Botón para aumentar la cantidad -->
+                            <button @click="increaseQuantity(item.tail)" class="increase-btn">+</button>
                         </div>
+
                     </div>
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </template>
 
-
-
 <style>
-#texto{
-    font-size: 18px;
-}
-.remove-btn {
+.remove-btn,
+.increase-btn {
     background-color: transparent;
-    color: #ff4747;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
     transition: color 0.3s;
 }
+.remove-btn{
+    color: #ff4747;
 
-/* Hover para el botón de eliminar */
+}
+.increase-btn{
+    color: #348bf0;
+}
 .remove-btn:hover {
     color: #fd5050;
 }
 
+.increase-btn:hover {
+    color: rgb(58, 94, 255);
+}
+
+/* Estilos generales para el carrito */
 .cart-items {
     width: 80%;
     margin: 0 auto;
@@ -156,7 +165,6 @@ api();
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    width: 100%;
     width: 100%;
 }
 
@@ -172,7 +180,6 @@ api();
     margin: 0 auto;
     width: 70%;
     margin-top: 20px;
-
 }
 
 header {
@@ -196,12 +203,11 @@ header {
     background-color: #0056b3;
 }
 
-/* Offcanvas Styles */
+/* Estilos para el offcanvas */
 .offcanvas {
     position: fixed;
     top: 0;
     right: -500px;
-    /* Initially hidden off-screen */
     width: 400px;
     height: 100%;
     background-color: #fff;
@@ -214,7 +220,6 @@ header {
 
 .offcanvas.open {
     right: 0;
-    /* Show the offcanvas */
 }
 
 .offcanvas-content {
@@ -258,18 +263,15 @@ ul {
     background-color: #b30000;
 }
 
-/* Media Queries para pantallas pequeñas (Móviles) */
+/* Media Queries para pantallas pequeñas */
 @media (max-width: 768px) {
     .offcanvas {
         width: 100%;
-        /* El offcanvas ocupará toda la pantalla */
         right: -150%;
-        /* Lo oculta al principio */
     }
 
     .offcanvas.open {
         right: 0;
-        /* Muestra el offcanvas a toda pantalla */
     }
 
     .offcanvas-content {
@@ -277,27 +279,15 @@ ul {
         padding: 20px;
     }
 
-    /* Para el botón de cerrar en pantallas móviles */
-    button {
-        width: 100%;
-        /* Hace que el botón ocupe todo el ancho */
-    }
-
-    /* Para móviles, mostramos solo 1 columna */
     .container {
         grid-template-columns: 1fr;
-        /* 1 columna */
-        grid-template-rows: auto;
     }
 }
 
 /* Media Queries para tabletas */
 @media (min-width: 768px) and (max-width: 1400px) {
-
-    /* Para tabletas, mostramos 2 columnas */
     .container {
         grid-template-columns: repeat(2, 1fr);
-        /* 2 columnas */
     }
 }
 </style>

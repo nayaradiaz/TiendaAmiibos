@@ -1,73 +1,98 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 
-// Definir las props que recibimos
 const props = defineProps({
   data: Object
 });
 
-// Definir la función para emitir el evento 'add-to-cart'
 const emit = defineEmits();
 
-// Emitir el producto cuando se hace clic en "Añadir al carrito"
 const addToCart = () => {
-  const item = props.data;  // Accedemos a los datos pasados por el padre
-  emit('add-to-cart', item); // Emitir el evento con el producto
+  const item = props.data;  
+  emit('add-to-cart', item); 
 };
-
-
 </script>
 
 <template>
-  <div class="wrapper">
-    <div>
-      <img :src="props.data.image" alt="Amiibo" class="img">
+  <div class="tarjeta">
+    <div class="img-container">
+      <img :src="props.data.image" alt="Amiibo" class="img" />
     </div>
-    <div class="contenido">
-      <h2>{{ props.data.name }}</h2>
-      <p>{{ props.data.amiiboSeries }}</p>
-      <button @click="addToCart" class="agregar">Añadir al carrito</button>
+    <div class="info">
+      <h3 class="titulo">{{ props.data.name }}</h3>
+      <p class="serie">{{ props.data.amiiboSeries }}</p>
+      <button @click="addToCart" class="btn-agregar">Añadir al carrito</button>
     </div>
   </div>
 </template>
 
-
 <style scoped>
-.wrapper {
-    display: flex;
-    border-radius: 5px;
-    box-shadow: #a5a2a2 5px 5px 10px;
-    background-color: #e5e5e5;
-    width: 40vh;
-    height: 35vh;
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  background-color: #cacaca;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+  overflow: hidden;
+  width: 300px;
+  height: 400px;
+  margin: 15px;
+  text-align: center;
 }
 
-.wrapper:hover {
-    transition: ease 1s;
-    transform: scale(0.95);
+.tarjeta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-button {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
+.img-container {
+  width: 100%;
+  height: 65%;
+  overflow: hidden;
 }
 
 .img {
-    width: 25vh;
-    height: 35vh;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
 }
 
-.contenido {
-    text-align: center;
-    width: 15vh;
+.img-container:hover .img {
+  transform: scale(1.1);
+}
+
+.info {
+  padding: 20px;
+}
+
+.titulo {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.serie {
+  font-size: 1rem;
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.btn-agregar {
+  padding: 12px 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn-agregar:hover {
+  background-color: #0056b3;
 }
 </style>
